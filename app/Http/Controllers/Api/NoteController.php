@@ -78,7 +78,7 @@ class NoteController extends Controller {
 	 */
 	public function destroy(Note $note) {
 		//abort(500, 'error en el servidor');
-		abort_if($note->category_id == 1, 403, 'No tiene permisos para eliminar');
+		//abort_if($note->category_id == 1, 403, 'No tiene permisos para eliminar');
 
 		$note->delete();
 

@@ -1,5 +1,9 @@
 var resource = null;
 
+Vue.transition('bounce-out',{
+    leaveClass: 'bounceOut'
+});
+
 Vue.filter('category', function(id){
     var category= _.find(this.categories,["id",id]);
     return category != null ? category.name : "";
@@ -33,7 +37,12 @@ Vue.component('note-row',{
             this.errors = [];
 
             resource.update({id: this.note.id}, this.draft).then(function(response){
-                this.$parent.notes.$set(this.$parent.notes.indexOf(this.note),response.data.note);
+                //this.$parent.notes.$set(this.$parent.notes.indexOf(this.note),response.data.note);
+                
+                for(var key in response.data.note){
+                   this.note[key] = response.data.note[key];
+                }
+
                 this.editing= false;
             }.bind(this),function(response){
                 this.errors = response.data.errors;
@@ -84,7 +93,10 @@ const vm= new Vue({
     el: "#app",
     data: {
         errors: [],
-        error: '',
+        alert: {
+            message: '',
+            display: false
+        },
         new_note: {
             note: '',
             category_id: ''
@@ -151,12 +163,15 @@ const vm= new Vue({
                   return response;
                 }
 
-                $('#error_message').show();
+               this.alert.message = response.data.message;
+               this.alert.display = true;
 
-               this.error = response.data.message;
-               $('#error_message').delay(3000).fadeOut(1000, function(){
+               setTimeout(function(){
+                    this.alert.display = false;
+               }.bind(this),4000);
+               /*$('#error_message').delay(3000).fadeOut(1000, function(){
                     this.error = '';
-                });
+                });*/
             }.bind(this));
         }.bind(this));
     }

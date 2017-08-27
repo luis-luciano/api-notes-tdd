@@ -4,7 +4,10 @@
 <!-- Start your project here-->
     <div id="app" class="container">
         <div class="col-md-8 col-md-offset-2">
-            <p class="alert alert-danger" v-show="error" id="error_message" transition="fade">@{{ error }}</p>
+            <div class="alert_container">
+                <p v-show="alert.display" class="alert alert-danger" transition="fade">@{{ alert.message }}</p>
+            </div>
+
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -48,13 +51,13 @@
         </script>
 
         <script type="text/template" id="note_row_tp">
-            <tr>
+            <tr class="animated" transition="bounce-out">
                 <template v-if="!editing">
                     <td>{{ note.category_id | category }}</td>
                     <td>{{ note.note }}</td>
                     <td>
                         <a title="Editar" v-on:click.prevent="edit"><i class="fa fa-pencil"></i></a>
-                        <a title="Eliminar" v-on:click.prevent="destroy" v-show='note.category_id != 1'>
+                        <a title="Eliminar" v-on:click.prevent="destroy">
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>
@@ -64,7 +67,7 @@
                         <select-category v-bind:id.sync='draft.category_id' v-bind:categories='categories'></select-category>
                     </td>
                     <td>
-                        <input type="text" v-model="draft.note" class="form-control">
+                        <input type="text" v-model="draft.note" class="form-control" v-on:keydown.enter="update" v-on:keydown.esc="cancel">
                         <ul v-if="errors.length" class="text-danger">
                             <li v-for="error in errors">{{ error }}</li>
                         </ul>
@@ -79,6 +82,21 @@
         </script>
     @endverbatim
     <!-- SCRIPTS -->
+    <style type="text/css">
+        .fade-transition{
+            transition: all 1s ease;
+            opacity: 100;
+        }
+
+        .fade-enter, .fade-leave{
+            opacity: 0
+        }
+
+        .alert_container{
+            font-size: 12px;
+            height: 60px;
+        }
+    </style>
    <!-- JQuery -->
     <script type="text/javascript" src="{{ asset('MDB_Free/js/jquery.min.js') }}"></script>
     <!-- Bootstrap core JavaScript -->
@@ -91,4 +109,5 @@
     <script src="{{ asset('js/vue.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.3.4/vue-resource.js"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 @endsection
