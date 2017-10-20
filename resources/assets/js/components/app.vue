@@ -139,11 +139,14 @@
             this.notes = response.data;
         });
 
+        Vue.http.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
 
         Vue.http.interceptors.push(function(request, next) {
           // continue to next interceptor
             next(function(response) {
-            
+                /*var token = document.getElementById('token').getAttribute('content');
+                request.headers['X-CSRF-TOKEN'] = token;*/
+
                 if(response.ok){
                   return response;
                 }
